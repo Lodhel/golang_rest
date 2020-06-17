@@ -1,9 +1,9 @@
 package main
 
 import (
-  "github.com/gorilla/mux"
-  "github.com/lodhel/golang_rest/book"
+  "log"
   "fmt"
+  "github.com/lodhel/golang_rest/book"
     //"github.com/gorilla/mux"
    //  _ "github.com/lib/pq"
    // _ "github.com/mattn/go-sqlite3"
@@ -24,8 +24,8 @@ func main() {
   } 
   defer db.Close()
     r := mux.NewRouter()
-    books = append(books, Book{ID: "1", Title: "Война и Мир", Author: &Author{Firstname: "Лев", Lastname: "Толстой"}})
-    books = append(books, Book{ID: "2", Title: "Преступление и наказание", Author: &Author{Firstname: "Фёдор", Lastname: "Достоевский"}})
+    books = append(book.books, book.Book{ID: "1", Title: "Война и Мир", Author: &Author{Firstname: "Лев", Lastname: "Толстой"}})
+    books = append(book.books, book.Book{ID: "2", Title: "Преступление и наказание", Author: &Author{Firstname: "Фёдор", Lastname: "Достоевский"}})
     r.HandleFunc("/books", getBooks).Methods("GET")
     r.HandleFunc("/books/{id}", getBook).Methods("GET")
     r.HandleFunc("/books", createBook).Methods("POST")
