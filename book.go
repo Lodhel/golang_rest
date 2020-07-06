@@ -6,6 +6,8 @@ import (
   "net/http"
 
   "fmt"
+  "encoding/json"
+  "log"
 )
 
 
@@ -13,6 +15,17 @@ type User struct {
   gorm.Model
   Name   string 
   Soname  string 
+}
+
+type UserModel struct {
+  Name string
+  Soname string
+}
+
+type ResponseUserModel struct {
+  id uint
+  Name string
+  Soname string
 }
 
 type Author struct {
@@ -30,9 +43,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
     if err != nil {
       panic(err)
     }
+    user := UserModel{name, soname}
+    user_id := db.Create(&user)
 
-    _ = db.Exec("insert into test.users (name, soname) values (?, ?)", 
-    name, soname)
+    response := ResponseUserModel{user_id, name, soname}
+    data, err := json.Marshal(response)
+    if err != nil {
+        log.Println(err)
+    }
 
     w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    _, _ = w.Write(data)
 }
