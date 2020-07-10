@@ -17,17 +17,6 @@ type User struct {
   Soname  string 
 }
 
-type UserModel struct {
-  Name string
-  Soname string
-}
-
-type ResponseUserModel struct {
-  id uint
-  Name string
-  Soname string
-}
-
 type Author struct {
   Firstname string 
   Lastname  string
@@ -43,16 +32,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
     if err != nil {
       panic(err)
     }
-    user := UserModel{name, soname}
-    user_id := db.Create(&user)
+    user := User{Name: name, Soname: soname}
 
-    response := ResponseUserModel{user_id, name, soname}
-    data, err := json.Marshal(response)
+    instance := db.Create(&user)
+    data, err := json.Marshal(instance)
     if err != nil {
         log.Println(err)
     }
 
     w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Authorization", "token")
     w.WriteHeader(http.StatusOK)
     _, _ = w.Write(data)
 }
